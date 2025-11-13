@@ -3,197 +3,144 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Rider Tracker (Comic UI + Search + Export)</title>
+  <title>Rider Tracker</title>
   <style>
-    /* Comic-style UI */
     body {
-      font-family: 'Comic Sans MS', 'Marker Felt', 'Arial Rounded MT Bold', sans-serif;
-      background: linear-gradient(135deg, #ffcc00 0%, #ff9900 100%);
-      color: #000;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #333;
       margin: 0;
       padding: 20px;
-      border: 8px solid #000;
-      box-shadow: 0 0 0 8px #ff3300, 0 0 0 16px #0066ff;
-      min-height: calc(100vh - 48px);
-      position: relative;
+      line-height: 1.6;
     }
     
-    /* Comic bubble effect for the main container */
-    body::before {
-      content: "";
-      position: absolute;
-      top: -10px;
-      left: -10px;
-      right: -10px;
-      bottom: -10px;
-      background: transparent;
-      border: 4px dashed #ff3300;
-      pointer-events: none;
-      z-index: -1;
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     
     h1 {
       text-align: center;
-      font-size: 32px;
-      margin-bottom: 25px;
-      text-transform: uppercase;
-      text-shadow: 3px 3px 0 #ff3300, 5px 5px 0 #0066ff;
-      letter-spacing: 1px;
-      background: #fff;
-      padding: 15px;
-      border: 5px solid #000;
-      border-radius: 20px;
-      box-shadow: 8px 8px 0 #000;
-      transform: rotate(-1deg);
+      margin-bottom: 30px;
+      color: #2c3e50;
     }
     
-    .form-container {
-      display: flex;
-      flex-wrap: wrap;
+    .form-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 15px;
       margin-bottom: 20px;
-      background: #fff;
       padding: 20px;
-      border: 5px solid #000;
-      border-radius: 15px;
-      box-shadow: 8px 8px 0 #000;
-      transform: rotate(0.5deg);
+      background: #f8f9fa;
+      border-radius: 6px;
     }
     
-    .search-container {
+    .search-section {
       display: flex;
       gap: 10px;
       margin-bottom: 20px;
-      background: #fff;
-      padding: 15px;
-      border: 5px solid #000;
-      border-radius: 15px;
-      box-shadow: 8px 8px 0 #000;
-      transform: rotate(-0.5deg);
-    }
-    
-    .search-container input {
-      flex: 1;
+      align-items: center;
     }
     
     input, select, button {
-      padding: 12px;
-      font-size: 16px;
-      border: 3px solid #000;
-      border-radius: 10px;
-      font-family: 'Comic Sans MS', 'Marker Felt', sans-serif;
-      box-shadow: 3px 3px 0 #000;
-      transition: all 0.1s ease;
-    }
-    
-    input:focus, select:focus {
-      outline: none;
-      box-shadow: 3px 3px 0 #0066ff;
-      transform: translate(-2px, -2px);
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
     }
     
     input, select {
-      flex: 1 1 180px;
-      background: #fff;
+      width: 100%;
+      background: white;
     }
     
     button {
       cursor: pointer;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      background: #007bff;
+      color: white;
+      border: none;
+      transition: background 0.2s;
+      white-space: nowrap;
     }
     
-    button:active {
-      transform: translate(3px, 3px);
-      box-shadow: 0 0 0 #000;
-    }
-    
-    .btn-primary {
-      background: #0066ff;
-      color: #fff;
+    button:hover {
+      background: #0056b3;
     }
     
     .btn-danger {
-      background: #ff3300;
-      color: #fff;
+      background: #dc3545;
+    }
+    
+    .btn-danger:hover {
+      background: #c82333;
+    }
+    
+    .btn-success {
+      background: #28a745;
+    }
+    
+    .btn-success:hover {
+      background: #218838;
     }
     
     .btn-secondary {
-      background: #666;
-      color: #fff;
+      background: #6c757d;
     }
     
-    .btn-export {
-      background: #00cc66;
-      color: #fff;
+    .btn-secondary:hover {
+      background: #545b62;
     }
     
-    .btn-search {
-      background: #ff9900;
-      color: #fff;
-    }
-    
-    .button-container {
+    .actions {
       display: flex;
-      flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 20px;
+      flex-wrap: wrap;
     }
     
     table {
       width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
+      border-collapse: collapse;
       margin-top: 20px;
-      border: 5px solid #000;
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 8px 8px 0 #000;
-      background: #fff;
+      background: white;
     }
     
     th, td {
-      border: 3px solid #000;
+      border: 1px solid #ddd;
       padding: 12px;
       text-align: left;
-      position: relative;
     }
     
     th {
-      background: #ffcc00;
-      font-weight: bold;
-      text-transform: uppercase;
-      text-shadow: 1px 1px 0 #fff;
+      background: #f8f9fa;
+      font-weight: 600;
     }
     
     tr:nth-child(even) {
-      background-color: #f0f8ff;
+      background-color: #f8f9fa;
     }
     
-    tr:hover {
-      background-color: #ffeb99;
-      transform: scale(1.01);
-    }
-    
-    .actions button {
-      margin-right: 5px;
-      font-size: 13px;
-      padding: 6px 10px;
-    }
-    
-    .search-result-info {
-      background: #fff;
-      padding: 10px 15px;
-      border: 3px solid #000;
-      border-radius: 10px;
+    .search-info {
+      padding: 10px;
       margin-bottom: 15px;
+      border-radius: 4px;
       text-align: center;
-      font-weight: bold;
-      box-shadow: 5px 5px 0 #000;
     }
     
-    /* Modal styles for password prompt */
+    .search-found {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .search-notfound {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
     .modal {
       display: none;
       position: fixed;
@@ -202,159 +149,103 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0,0,0,0.7);
+      background-color: rgba(0,0,0,0.5);
     }
     
     .modal-content {
-      background: #fff;
+      background: white;
       margin: 15% auto;
-      padding: 25px;
-      border: 5px solid #000;
-      border-radius: 20px;
-      width: 320px;
+      padding: 20px;
+      border-radius: 8px;
+      width: 300px;
       text-align: center;
-      box-shadow: 10px 10px 0 #000;
-      transform: rotate(-1deg);
     }
     
-    .close {
-      color: #ff3300;
-      float: right;
-      font-size: 32px;
-      font-weight: bold;
-      cursor: pointer;
-      text-shadow: 2px 2px 0 #000;
+    .action-buttons {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
     }
     
-    .close:hover {
-      color: #000;
-    }
-    
-    /* Comic speech bubble for modal */
-    .modal-content::after {
-      content: "";
-      position: absolute;
-      bottom: -30px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 15px;
-      border-style: solid;
-      border-color: #000 transparent transparent transparent;
-    }
-    
-    /* Add some comic-style elements */
-    .comic-dot {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      background: #000;
-      border-radius: 50%;
-    }
-    
-    .comic-dot:nth-child(1) { top: 10px; left: 10px; }
-    .comic-dot:nth-child(2) { top: 10px; right: 10px; }
-    .comic-dot:nth-child(3) { bottom: 10px; left: 10px; }
-    .comic-dot:nth-child(4) { bottom: 10px; right: 10px; }
-    
-    /* Action icons */
-    .action-icon {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      margin-right: 5px;
-      vertical-align: middle;
-    }
-    
-    /* Responsive adjustments */
     @media (max-width: 768px) {
-      .form-container {
+      .form-section {
+        grid-template-columns: 1fr;
+      }
+      
+      .search-section {
         flex-direction: column;
       }
       
-      .search-container {
+      .actions {
         flex-direction: column;
       }
       
-      input, select {
-        flex: 1 1 auto;
-      }
-      
-      .button-container {
+      .action-buttons {
         flex-direction: column;
-      }
-      
-      table {
-        display: block;
-        overflow-x: auto;
       }
     }
   </style>
 </head>
 <body>
-  <!-- Comic dots for decoration -->
-  <div class="comic-dot"></div>
-  <div class="comic-dot"></div>
-  <div class="comic-dot"></div>
-  <div class="comic-dot"></div>
+  <div class="container">
+    <h1>Rider Absconding Tracker</h1>
 
-  <h1>Rider Absconding Tracker</h1>
+    <div class="search-section">
+      <input id="searchPhone" placeholder="Search by Phone Number" style="flex: 1;" />
+      <button onclick="searchByPhone()" class="btn-secondary">Search</button>
+      <button onclick="clearSearch()" class="btn-secondary">Clear</button>
+    </div>
 
-  <div class="search-container">
-    <input id="searchPhone" placeholder="🔍 Search by Phone Number" />
-    <button class="btn-search" onclick="searchByPhone()">Search</button>
-    <button class="btn-secondary" onclick="clearSearch()">Clear Search</button>
-  </div>
+    <div class="form-section">
+      <input id="riderName" placeholder="Rider Name" />
+      <input id="orderId" placeholder="Order ID" />
+      <input id="orderValue" placeholder="Order Value" />
+      <input id="phoneNumber" placeholder="Phone Number" />
+      <select id="remarks">
+        <option value="Rider Absconded with order">Rider Absconded with order</option>
+        <option value="Rider misbehaved with customer">Rider misbehaved with customer</option>
+        <option value="Wrong address delivered">Wrong address delivered</option>
+        <option value="Other issue">Other issue</option>
+      </select>
+    </div>
 
-  <div class="form-container">
-    <input id="riderName" placeholder="Rider Name" />
-    <input id="orderId" placeholder="Order ID" />
-    <input id="orderValue" placeholder="Order Value" />
-    <input id="phoneNumber" placeholder="Phone Number" />
-    <select id="remarks">
-      <option value="Rider Absconded with order">Rider Absconded with order</option>
-      <option value="Rider misbehaved with customer">Rider misbehaved with customer</option>
-      <option value="Wrong address delivered">Wrong address delivered</option>
-      <option value="Other issue">Other issue</option>
-    </select>
-  </div>
+    <div class="actions">
+      <button onclick="addOrUpdate()" class="btn-success">Save</button>
+      <button onclick="clearForm()" class="btn-secondary">Clear Form</button>
+      <button onclick="showPasswordModal('clearAll')" class="btn-danger">Clear All</button>
+      <button onclick="exportToExcel()" class="btn-success">Export Excel</button>
+    </div>
 
-  <div class="button-container">
-    <button class="btn-primary" onclick="addOrUpdate()">💾 Save</button>
-    <button class="btn-secondary" onclick="clearForm()">🧹 Clear Form</button>
-    <button class="btn-danger" onclick="showPasswordModal()">💥 Clear All</button>
-    <button class="btn-export" onclick="exportToExcel()">📊 Export Excel</button>
-  </div>
+    <div id="searchResultInfo" class="search-info" style="display: none;"></div>
 
-  <div id="searchResultInfo" class="search-result-info" style="display: none;"></div>
+    <table>
+      <thead>
+        <tr>
+          <th>Sr. No.</th>
+          <th>Rider Name</th>
+          <th>Order ID</th>
+          <th>Order Value</th>
+          <th>Phone</th>
+          <th>Remarks</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="8" style="text-align:center;">Loading data...</td></tr>
+      </tbody>
+    </table>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Sr. No.</th>
-        <th>Rider Name</th>
-        <th>Order ID</th>
-        <th>Order Value</th>
-        <th>Phone</th>
-        <th>Remarks</th>
-        <th>Date</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="tableBody">
-      <tr><td colspan="8" style="text-align:center;">Loading...</td></tr>
-    </tbody>
-  </table>
-
-  <!-- Password Modal -->
-  <div id="passwordModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closePasswordModal()">&times;</span>
-      <h3 style="text-transform: uppercase; text-shadow: 2px 2px 0 #ffcc00;">Clear All Data</h3>
-      <p>Please enter password to clear all data:</p>
-      <input type="password" id="passwordInput" placeholder="Enter password" style="width: 90%; padding: 10px; margin: 15px 0; border: 3px solid #000; border-radius: 8px;">
-      <div>
-        <button class="btn-danger" onclick="verifyPassword()">💣 Confirm Clear All</button>
-        <button class="btn-secondary" onclick="closePasswordModal()">❌ Cancel</button>
+    <!-- Password Modal -->
+    <div id="passwordModal" class="modal">
+      <div class="modal-content">
+        <h3 id="modalTitle">Password Required</h3>
+        <p id="modalMessage">Enter password to continue:</p>
+        <input type="password" id="passwordInput" placeholder="Enter password" style="width: 90%; margin: 10px 0;" />
+        <div>
+          <button onclick="verifyPassword()" class="btn-danger" id="confirmButton">Confirm</button>
+          <button onclick="closePasswordModal()" class="btn-secondary">Cancel</button>
+        </div>
       </div>
     </div>
   </div>
@@ -366,18 +257,18 @@
   <script>
     // Firebase configuration
     const firebaseConfig = {
-      apiKey: "AIzaSyCMcTi-dZnWVgeTFg17rLZwDaHJCM4RF08",
-      authDomain: "real-time-502b1.firebaseapp.com",
-      projectId: "real-time-502b1",
-      storageBucket: "real-time-502b1.firebasestorage.app",
-      messagingSenderId: "483376670752",
-      appId: "1:483376670752:web:366d8934a004c8372bf445",
-      measurementId: "G-NVV0L581GB",
-      databaseURL: "https://real-time-502b1-default-rtdb.firebaseio.com/"
+      apiKey: "AIzaSyA6fTK2Q5S3o36_fHppMI4a-SzDAbeQYjM",
+      authDomain: "kammanahaill-rider-absconding.firebaseapp.com",
+      databaseURL: "https://kammanahaill-rider-absconding-default-rtdb.firebaseio.com",
+      projectId: "kammanahaill-rider-absconding",
+      storageBucket: "kammanahaill-rider-absconding.firebasestorage.app",
+      messagingSenderId: "229278595614",
+      appId: "1:229278595614:web:fe4af33f045eef16b38c0f",
+      measurementId: "G-FEV7T2EVBH"
     };
 
     // Initialize Firebase
-    firebase.initializeApp(firebaseConfig);
+    const app = firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
     const dataRef = database.ref("riderAbsconding");
 
@@ -388,7 +279,41 @@
     const tableBody = document.getElementById('tableBody');
     const searchResultInfo = document.getElementById('searchResultInfo');
 
+    // Variables for password protection
+    let currentAction = '';
+    let currentKey = '';
+    const PASSWORD = "211225";
+
+    // Initialize the app
+    function initApp() {
+      console.log("Initializing Rider Tracker App...");
+      
+      // Listen for data changes
+      dataRef.on('value', (snapshot) => {
+        console.log("Data received from Firebase:", snapshot.val());
+        snapshotStore = snapshot.val() || {};
+        
+        if (!isSearching) {
+          renderTable();
+        }
+      }, (error) => {
+        console.error("Firebase error:", error);
+        tableBody.innerHTML = `<tr><td colspan='8' style='text-align:center;color:red;'>Error loading data: ${error.message}</td></tr>`;
+      });
+
+      // Add event listener for Enter key in form fields
+      const inputs = document.querySelectorAll('input');
+      inputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            addOrUpdate();
+          }
+        });
+      });
+    }
+
     function renderTable() {
+      console.log("Rendering table...");
       tableBody.innerHTML = "";
       const dataToRender = isSearching ? searchResults : snapshotStore;
       const keys = Object.keys(dataToRender);
@@ -396,16 +321,16 @@
       if (keys.length === 0) {
         const message = isSearching ? 
           "No matching records found." : 
-          "No data available";
+          "No data available. Add your first entry above.";
         tableBody.innerHTML = `<tr><td colspan='8' style='text-align:center;'>${message}</td></tr>`;
         return;
       }
       
       // Sort by timestamp (newest first)
       keys.sort((a, b) => {
-        const timeA = new Date(dataToRender[a].timestamp || 0);
-        const timeB = new Date(dataToRender[b].timestamp || 0);
-        return timeB - timeA;
+        const timeA = dataToRender[a].timestamp || "";
+        const timeB = dataToRender[b].timestamp || "";
+        return timeB.localeCompare(timeA);
       });
       
       // Add serial numbers
@@ -414,53 +339,162 @@
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>${index + 1}</td>
-          <td>${entry.name || ""}</td>
-          <td>${entry.orderId || ""}</td>
-          <td>${entry.orderValue || ""}</td>
-          <td>${entry.phone || ""}</td>
-          <td>${entry.remarks || ""}</td>
-          <td>${entry.timestamp || ""}</td>
-          <td class="actions"></td>
+          <td>${escapeHtml(entry.name || "")}</td>
+          <td>${escapeHtml(entry.orderId || "")}</td>
+          <td>${escapeHtml(entry.orderValue || "")}</td>
+          <td>${escapeHtml(entry.phone || "")}</td>
+          <td>${escapeHtml(entry.remarks || "")}</td>
+          <td>${escapeHtml(entry.timestamp || "")}</td>
+          <td>
+            <div class="action-buttons">
+              <button class="btn-secondary" onclick="requestEdit('${key}')">Edit</button>
+              <button class="btn-danger" onclick="requestDelete('${key}')">Delete</button>
+            </div>
+          </td>
         `;
-        
-        const actions = tr.querySelector(".actions");
-        
-        // Edit button
-        const editBtn = document.createElement("button");
-        editBtn.textContent = "✏️ Edit";
-        editBtn.className = "btn-secondary";
-        editBtn.onclick = () => {
-          document.getElementById("riderName").value = entry.name || "";
-          document.getElementById("orderId").value = entry.orderId || "";
-          document.getElementById("orderValue").value = entry.orderValue || "";
-          document.getElementById("phoneNumber").value = entry.phone || "";
-          document.getElementById("remarks").value = entry.remarks || "";
-          editKey = key;
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        };
-        
-        // Delete button
-        const delBtn = document.createElement("button");
-        delBtn.textContent = "🗑️ Delete";
-        delBtn.className = "btn-danger";
-        delBtn.onclick = () => { 
-          if(confirm("Are you sure you want to delete this entry?")) {
-            database.ref(`riderAbsconding/${key}`).remove();
-          }
-        };
-        
-        actions.append(editBtn, delBtn);
         tableBody.appendChild(tr);
       });
     }
 
-    // Listen for data changes
-    dataRef.on('value', (snapshot) => {
-      snapshotStore = snapshot.val() || {};
-      if (!isSearching) {
-        renderTable();
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Password protected functions
+    function requestEdit(key) {
+      console.log("Edit requested for key:", key);
+      currentAction = 'edit';
+      currentKey = key;
+      showPasswordModal('edit');
+    }
+
+    function requestDelete(key) {
+      console.log("Delete requested for key:", key);
+      currentAction = 'delete';
+      currentKey = key;
+      showPasswordModal('delete');
+    }
+
+    function performEdit() {
+      console.log("Performing edit for key:", currentKey);
+      const dataSource = isSearching ? searchResults : snapshotStore;
+      const entry = dataSource[currentKey];
+      
+      if (!entry) {
+        alert("Entry not found!");
+        return;
       }
-    });
+
+      // Fill the form with existing data
+      document.getElementById("riderName").value = entry.name || "";
+      document.getElementById("orderId").value = entry.orderId || "";
+      document.getElementById("orderValue").value = entry.orderValue || "";
+      document.getElementById("phoneNumber").value = entry.phone || "";
+      document.getElementById("remarks").value = entry.remarks || "";
+      editKey = currentKey;
+      
+      // Scroll to form
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      document.getElementById("riderName").focus();
+      
+      alert("You can now edit the entry. Click 'Save' to update.");
+    }
+
+    function performDelete() {
+      console.log("Performing delete for key:", currentKey);
+      
+      database.ref(`riderAbsconding/${currentKey}`).remove()
+        .then(() => {
+          console.log("Entry deleted successfully");
+          alert("Entry deleted successfully!");
+          
+          // If we're in search mode, also remove from search results
+          if (isSearching && searchResults[currentKey]) {
+            delete searchResults[currentKey];
+          }
+        })
+        .catch((error) => {
+          alert("Error deleting entry: " + error.message);
+          console.error("Delete error:", error);
+        });
+    }
+
+    function showPasswordModal(action) {
+      const modal = document.getElementById("passwordModal");
+      const title = document.getElementById("modalTitle");
+      const message = document.getElementById("modalMessage");
+      const confirmBtn = document.getElementById("confirmButton");
+      
+      switch(action) {
+        case 'edit':
+          title.textContent = "Edit Entry - Password Required";
+          message.textContent = "Enter password to edit this entry:";
+          confirmBtn.textContent = "Confirm Edit";
+          confirmBtn.className = "btn-secondary";
+          break;
+        case 'delete':
+          title.textContent = "Delete Entry - Password Required";
+          message.textContent = "Enter password to delete this entry:";
+          confirmBtn.textContent = "Confirm Delete";
+          confirmBtn.className = "btn-danger";
+          break;
+        case 'clearAll':
+          title.textContent = "Clear All Data - Password Required";
+          message.textContent = "Enter password to clear ALL data:";
+          confirmBtn.textContent = "Confirm Clear All";
+          confirmBtn.className = "btn-danger";
+          break;
+        default:
+          title.textContent = "Password Required";
+          message.textContent = "Enter password to continue:";
+          confirmBtn.textContent = "Confirm";
+          confirmBtn.className = "btn-primary";
+      }
+      
+      modal.style.display = "block";
+      document.getElementById("passwordInput").value = "";
+      document.getElementById("passwordInput").focus();
+    }
+
+    function closePasswordModal() {
+      document.getElementById("passwordModal").style.display = "none";
+      // Don't reset currentAction and currentKey here - wait for verifyPassword
+    }
+
+    function verifyPassword() {
+      const password = document.getElementById("passwordInput").value;
+      
+      if (password === PASSWORD) {
+        closePasswordModal();
+        
+        switch(currentAction) {
+          case 'edit':
+            performEdit();
+            break;
+          case 'delete':
+            if (confirm("Are you sure you want to delete this entry? This action cannot be undone.")) {
+              performDelete();
+            }
+            break;
+          case 'clearAll':
+            clearAll();
+            break;
+          default:
+            console.log("No action specified");
+        }
+        
+        // Reset action variables after completion
+        currentAction = '';
+        currentKey = '';
+        
+      } else {
+        alert("Incorrect password. Please try again.");
+        document.getElementById("passwordInput").value = "";
+        document.getElementById("passwordInput").focus();
+      }
+    }
 
     function searchByPhone() {
       const searchTerm = document.getElementById("searchPhone").value.trim();
@@ -469,6 +503,8 @@
         alert("Please enter a phone number to search.");
         return;
       }
+      
+      console.log("Searching for:", searchTerm);
       
       // Filter entries by phone number
       searchResults = {};
@@ -485,12 +521,12 @@
       const resultCount = Object.keys(searchResults).length;
       if (resultCount > 0) {
         searchResultInfo.textContent = `Found ${resultCount} record(s) matching phone number: ${searchTerm}`;
+        searchResultInfo.className = "search-info search-found";
         searchResultInfo.style.display = "block";
-        searchResultInfo.style.background = "#aaffaa";
       } else {
         searchResultInfo.textContent = `No records found matching phone number: ${searchTerm}`;
+        searchResultInfo.className = "search-info search-notfound";
         searchResultInfo.style.display = "block";
-        searchResultInfo.style.background = "#ffaaaa";
       }
       
       renderTable();
@@ -512,8 +548,8 @@
       const remarks = document.getElementById("remarks").value;
       
       // Validation
-      if(!name || !orderId || !orderValue || !phone) { 
-        alert("Please fill all required fields."); 
+      if (!name || !orderId || !orderValue || !phone) { 
+        alert("Please fill all required fields (Rider Name, Order ID, Order Value, and Phone Number)."); 
         return; 
       }
       
@@ -523,8 +559,10 @@
         orderValue, 
         phone, 
         remarks, 
-        timestamp: new Date().toLocaleString() 
+        timestamp: new Date().toLocaleString('en-IN') 
       };
+      
+      console.log("Saving entry:", entry);
       
       if (editKey) {
         // Update existing entry
@@ -536,15 +574,18 @@
           })
           .catch((error) => {
             alert("Error updating entry: " + error.message);
+            console.error("Update error:", error);
           });
       } else {
         // Add new entry
         dataRef.push(entry)
           .then(() => {
+            alert("Entry added successfully!");
             clearForm();
           })
           .catch((error) => {
             alert("Error adding entry: " + error.message);
+            console.error("Add error:", error);
           });
       }
     }
@@ -558,29 +599,6 @@
       editKey = null;
     }
 
-    function showPasswordModal() {
-      document.getElementById("passwordModal").style.display = "block";
-      document.getElementById("passwordInput").value = "";
-    }
-
-    function closePasswordModal() {
-      document.getElementById("passwordModal").style.display = "none";
-    }
-
-    function verifyPassword() {
-      const password = document.getElementById("passwordInput").value;
-      const correctPassword = "211225";
-      
-      if (password === correctPassword) {
-        closePasswordModal();
-        clearAll();
-      } else {
-        alert("Incorrect password. Please try again.");
-        document.getElementById("passwordInput").value = "";
-        document.getElementById("passwordInput").focus();
-      }
-    }
-
     function clearAll() {
       if (confirm("Are you sure you want to delete ALL entries? This action cannot be undone.")) {
         dataRef.remove()
@@ -590,6 +608,7 @@
           })
           .catch((error) => {
             alert("Error deleting entries: " + error.message);
+            console.error("Clear all error:", error);
           });
       }
     }
@@ -617,11 +636,11 @@
       let csvContent = "data:text/csv;charset=utf-8,";
       
       // Add header
-      csvContent += header.join(",") + "\n";
+      csvContent += header.join(",") + "\r\n";
       
       // Add rows
       rows.forEach(row => {
-        csvContent += row.map(cell => `"${cell}"`).join(",") + "\n";
+        csvContent += row.map(cell => `"${cell}"`).join(",") + "\r\n";
       });
       
       const encodedUri = encodeURI(csvContent);
@@ -638,6 +657,11 @@
       document.body.removeChild(link);
     }
 
+    // Initialize the app when the page loads
+    document.addEventListener('DOMContentLoaded', function() {
+      initApp();
+    });
+
     // Make functions available globally
     window.addOrUpdate = addOrUpdate;
     window.clearForm = clearForm;
@@ -648,6 +672,8 @@
     window.exportToExcel = exportToExcel;
     window.searchByPhone = searchByPhone;
     window.clearSearch = clearSearch;
+    window.requestEdit = requestEdit;
+    window.requestDelete = requestDelete;
   </script>
 </body>
 </html>
